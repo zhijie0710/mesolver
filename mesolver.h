@@ -39,7 +39,7 @@ class mesolver {
 // }
 
 inline void mesolver::RK4(cx_mat& rho, cx_mat H) {
-	lindbladME(rho, H); something
+	lindbladME(rho, H);
 } 
 
 inline void mesolver::lindbladME(cx_mat& rho, cx_mat H) {
