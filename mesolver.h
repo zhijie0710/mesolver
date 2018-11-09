@@ -22,7 +22,7 @@ class mesolver {
 		// inline void lindvladME(H, rho, *cOps, *coeff);
 		inline void RK4(cx_mat&, cx_mat);
 		inline void lindbladME(cx_mat&, cx_mat);
-//anychange!!!!llll
+	// David edits
 
 };
 
