@@ -1,7 +1,7 @@
-main.exe: mesolver.o main.o
-	g++ main.o mesolver.o -o main.exe -larmadillo
+main.exe: mesolver.o test.o
+	g++ test.o mesolver.o -o test.exe -larmadillo
 
-main.p: main.cpp
+test.o: test.cpp
 	g++ -c -std=c++11 main.cpp -larmadillo
 
 mesolver.o: mesolver.cpp mesolver.h
@@ -10,5 +10,5 @@ mesolver.o: mesolver.cpp mesolver.h
 clean:
 	rm *.o *.exe
 
-run: main.exe
-	./main.exe
+run: test.exe
+	./test.exe
