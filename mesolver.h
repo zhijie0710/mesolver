@@ -23,6 +23,7 @@ class mesolver {
 		inline void RK4(cx_mat&, cx_mat);
 		inline void lindbladME(cx_mat&, cx_mat);
 		// This is my stuff!
+		// This is some change
 };
 
 #endif // MESOLVER
