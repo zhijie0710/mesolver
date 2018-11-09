@@ -30,8 +30,7 @@ int main() {
 	H0 = sigmaz;
 	cOps = {a, ad};
 	tOps = {rho0, rho1};
-	// Ht = {sigmax};
-	Ht = {H0, Hising}
+	Ht = {sigmax};
 	dt = 0.1; tmax = 10;
 	coeff = {2.3};
 	params = {{0.2, tmax}};
