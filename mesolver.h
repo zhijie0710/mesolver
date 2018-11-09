@@ -24,6 +24,7 @@ class mesolver {
 		inline void lindbladME(cx_mat&, cx_mat);
 		// This is my stuff!
 		// This is some change
+		//something ///
 };
 
 #endif // MESOLVER
