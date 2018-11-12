@@ -1,4 +1,5 @@
 // #include <iostream>
+#include <fstream>
 #include "mesolver.h"
 
 using namespace std;
@@ -15,8 +16,11 @@ float pulse2(float t, vector<float> params) {
 int main() {
 
 	mesolver me;
+	ofstream fout;
 
-	cx_mat rho0, H0, a, ad, rho1, sigmax, sigmaz;
+	fout.open("output.dat");
+
+	cx_mat rho0, H0, a, ad, rho1, sigmax, sigmaz, someState;
 	vector<cx_mat> cOps, tOps, Ht;
 	float dt, tmax;
 	vector<float> coeff;
@@ -35,18 +39,21 @@ int main() {
 	cOps = {a};
 	tOps = {rho0, rho1};
 	Ht = {sigmax};
-	dt = 0.1; tmax = 10;
-	coeff = {2.3};
+	dt = 0.001; tmax = 15;
+	coeff = {2.0};
 	params = {{0.2, tmax}};
 	vector<float(*)(float, vector<float>)> f = {pulse1};
 
-	cout << H0 << endl;
-
 	fmat data;
+	someState = ones<cx_mat>(2,2);
+	someState *= 0.5;
 
-	data = me.evolveState(rho0, H0, cOps, tOps, Ht, params, f, dt, tmax, coeff, isSparse);
+	data = me.evolveState(someState, H0, cOps, tOps, Ht, params, f, dt, tmax, coeff, isSparse);
+	// cout << data << endl;
 
-	cout << data << endl;
+	fout << data;
+
+	fout.close();
 
 	return 0;
 }
