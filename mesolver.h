@@ -43,31 +43,41 @@ inline void mesolver::RK4(cx_mat& rho, cx_mat H) {
 inline void mesolver::lindbladME(cx_mat& rho, cx_mat H) {
 	rho = 2.0*IM*PI*(rho*H - H*rho);
 }
-/*
+cx_mat a(2,2);
+a(0,1) = 1;
+
+vector<cx_mat> ops = {a} ; 
+vector<float> coeff = {0.333} ;
+
+
 //inclue the Armadillo c++ library
 //define lindbladME(t,tf.xf):
-cx_mat lindbladME(double t, cx_mat H, cx_mat rho,*cOps, *coeff)
+cx_mat lindbladME(cx_mat H, cx_mat rho, *ops, *coeff)
 {
-	const   complex<double> i(0.0,1.0); 
-	cx_mat mx;
-	mx = -i/h_bar*[H,rho]+(*coeff)*[(*cOps)*rho*(*cOps.dag())-1/2*{(*cOps.dag())*(*cOps),rho}];//this is pseudocode,,,,,
-	return(mx);
+	
+	cx_mat newrho;
+	newrho = IM * { rho * H - H * rho };
+	for (int i = 0; i < coeff.size() ; i++)
+	{
+		newrho += coeff[j]*(ops[j]*rho*ops[i].t() - 0.5*(ops[i].t()*ops[i]*rho + rho*ops[i].t()*ops[i]));
+
+	}
+	//mx = -i/h_bar*[H,rho]+(*coeff)*[(*cOps)*rho*(*cOps.dag())-1/2*{(*cOps.dag())*(*cOps),rho}];
+	return(newrho);
 }
 
 //define the Runge-Kutta 4-th order method:
 cx_mat RK4(double t, double tf, cx_mat xf, double dt, cx_mat H1, cx_mat H2)
 {
-	cx_mat lilndbladME(double t,cx_mat H, cx_mat rho,*cOps, *coeff);
-  lilndbladME(t,H,rho,*cOps, *coeff)
-	cx_mat k1 = lilndbladME(t,H,rho,*cOps, *coeff) * hs;
+	cx_mat lilndbladME( cx_mat H, cx_mat rho,*cOps, *coeff);
+	cx_mat k1 = lilndbladME(H,rho,*cOps, *coeff) * hs;
 	cx_mat rho1 = rho + k1 * 0.5;
-	cx_mat k2 = lilndbladME(t + hs/2, H, rho1, *cOps, *coeff) * hs;
+	cx_mat k2 = lilndbladME( H, rho1, *cOps, *coeff) * hs;
 	cx_mat rho2 = rho + k2 * 0.5;
-	cx_mat k3 = fx(t + hs/2, H, rho2, *cOps, *coeff) * hs;
+	cx_mat k3 = lilndbladME( H, rho2, *cOps, *coeff) * hs;
 	cx_mat rho3 = rho + k3;
-	cx_mat k4 = fx(t + hs, H, rho3, *cOps, *coeff) * hs;
+	cx_mat k4 = lilndbladME( H, rho3, *cOps, *coeff) * hs;
 	cx_mat xx = rho + (k1 + 2*(k2 + k3) + k4)/6;
 
 	return(xx); 
 }
-*/
