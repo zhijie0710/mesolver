@@ -15,7 +15,7 @@ class mesolver {
 	public:
 		mesolver();
 		~mesolver();
-		fmat evolveState(cx_mat, cx_mat, vector<cx_mat>, vector<cx_mat>, vector<cx_mat>, vector<vector<float>>, float(*)(float, vector<float>), float, float, vector<float>, bool);
+		fmat evolveState(cx_mat, cx_mat, vector<cx_mat>, vector<cx_mat>, vector<cx_mat>, vector<vector<float>>, vector<float(*)(float, vector<float>)>, float, float, vector<float>, bool);
 
 	private:
 		// inline void RK4(H, rho, dt, *cOps, *coeff);

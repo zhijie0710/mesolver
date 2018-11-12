@@ -8,7 +8,7 @@ mesolver::~mesolver() {
 
 }
 
-fmat mesolver::evolveState(cx_mat rho0, cx_mat H0, vector<cx_mat> cOps, vector<cx_mat> tOps, vector<cx_mat> Ht, vector<vector<float>> params, float(*f)(float, vector<float>), float dt, float tmax, vector<float> coeff, bool isSparse) {
+fmat mesolver::evolveState(cx_mat rho0, cx_mat H0, vector<cx_mat> cOps, vector<cx_mat> tOps, vector<cx_mat> Ht, vector<vector<float>> params, vector<float(*)(float, vector<float>)> f, float dt, float tmax, vector<float> coeff, bool isSparse) {
 	cx_mat currentState, H;
 	int dataLength, dataIndex;
 	currentState = rho0;
@@ -19,7 +19,7 @@ fmat mesolver::evolveState(cx_mat rho0, cx_mat H0, vector<cx_mat> cOps, vector<c
 	dataIndex = 0;
 	while(t <= tmax && dataIndex < dataLength) {
 		for(int i = 0; i < Ht.size(); i++) {
-			H += f(t, params[i])*Ht[i];
+			H += f[i](t, params[i])*Ht[i];
 		}
 		dataList(0, dataIndex) = t;
 		for(int i = 0; i < tOps.size(); i++) {
