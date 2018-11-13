@@ -1,11 +1,13 @@
+INC = -I ~/Eigen/Eigen
+
 test.exe: mesolver.o test.o
-	g++ test.o mesolver.o -o test.exe -larmadillo
+	g++ $(INC) test.o mesolver.o -o test.exe -larmadillo
 
 test.o: test.cpp
-	g++ -c -std=c++11 test.cpp -larmadillo
+	g++ $(INC) -c -std=c++11 test.cpp -larmadillo
 
 mesolver.o: mesolver.cpp mesolver.h
-	g++ -c -std=c++11 mesolver.cpp -larmadillo
+	g++ $(INC) -c -std=c++11 mesolver.cpp -larmadillo
 
 clean:
 	rm *.o *.exe

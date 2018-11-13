@@ -39,7 +39,7 @@ int main() {
 	cOps = {a};
 	tOps = {rho0, rho1};
 	Ht = {sigmax};
-	dt = 0.001; tmax = 15;
+	dt = 0.000001; tmax = 15;
 	coeff = {2.0};
 	params = {{0.2, tmax}};
 	vector<float(*)(float, vector<float>)> f = {pulse1};
@@ -48,7 +48,7 @@ int main() {
 	someState = ones<cx_mat>(2,2);
 	someState *= 0.5;
 
-	data = me.evolveState(someState, H0, cOps, tOps, Ht, params, f, dt, tmax, coeff, isSparse);
+	// data = me.evolveState(rho0, H0, cOps, tOps, Ht, params, f, dt, tmax, coeff, isSparse);
 	// cout << data << endl;
 
 	fout << data;
