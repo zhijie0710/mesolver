@@ -1,9 +1,9 @@
-// #include <iostream>
 #include <fstream>
 #include "mesolver.h"
 
 using namespace std;
 using namespace arma;
+// using namespace Eigen;
 
 float pulse1(float t, vector<float> params) {
 	return(params[0]*sin(PI*t/params[1]));
@@ -39,7 +39,7 @@ int main() {
 	cOps = {a};
 	tOps = {rho0, rho1};
 	Ht = {sigmax};
-	dt = 0.000001; tmax = 15;
+	dt = 0.001; tmax = 15;
 	coeff = {2.0};
 	params = {{0.2, tmax}};
 	vector<float(*)(float, vector<float>)> f = {pulse1};
@@ -48,7 +48,15 @@ int main() {
 	someState = ones<cx_mat>(2,2);
 	someState *= 0.5;
 
-	// data = me.evolveState(rho0, H0, cOps, tOps, Ht, params, f, dt, tmax, coeff, isSparse);
+	vector<float> tvec;
+	for(int i = 0; i < 10000; i++) {
+		tvec.push_back(dt*i);
+	}
+	// for(int i = 0; i < tvec.size(); i++)
+	// 	cout << tvec[i] << " ";
+	// cout << endl;
+
+	data = me.evolveState(rho0, H0, cOps, tOps, Ht, params, f, dt, tvec, coeff, isSparse);
 	// cout << data << endl;
 
 	fout << data;
@@ -57,3 +65,50 @@ int main() {
 
 	return 0;
 }
+
+/*
+int main() {
+
+	mesolver me;
+	ofstream fout;
+
+	fout.open("output.dat");
+
+	MatrixXcd rho0, H0, a, ad, rho1, sigmax, sigmaz, someState;
+	vector<MatrixXcd> cOps, tOps, Ht;
+	float dt, tmax;
+	vector<float> coeff;
+	vector<vector<float>> params;
+	bool isSparse = 0;
+
+	a = MatrixXcd::Zero(2,2);
+	ad = MatrixXcd::Zero(2,2);
+	rho0 = MatrixXcd::Zero(2,2);
+	rho1 = MatrixXcd::Zero(2,2);
+	a(0, 1) = 1; ad(1, 0) = 1;
+	rho0(0, 0) = 1; rho1(1, 1) = 1;
+	sigmax = a + ad;
+	sigmaz = rho0 - rho1;
+	H0 = sigmaz;
+	cOps = {a};
+	tOps = {rho0, rho1};
+	Ht = {sigmax};
+	dt = 0.001; tmax = 15;
+	coeff = {0};
+	params = {{0.02, tmax}};
+	vector<float(*)(float, vector<float>)> f = {pulse1};
+
+	MatrixXf data;
+	someState = MatrixXcd::Ones(2,2);
+	someState *= 0.5;
+
+	data = me.evolveState(rho0, H0, cOps, tOps, Ht, params, f, dt, tmax, coeff, isSparse);
+	cout << data << endl;
+
+	fout << data;
+
+	fout.close();
+
+	return 0;
+}
+*/

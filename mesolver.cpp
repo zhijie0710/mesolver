@@ -1,4 +1,3 @@
-/*
 #include "mesolver.h"
 
 mesolver::mesolver() {
@@ -9,26 +8,37 @@ mesolver::~mesolver() {
 
 }
 
-fmat mesolver::evolveState(cx_mat rho0, cx_mat H0, vector<cx_mat> cOps, vector<cx_mat> tOps, vector<cx_mat> Ht, vector<vector<float>> params, vector<float(*)(float, vector<float>)> f, float dt, float tmax, vector<float> coeff, bool isSparse) {
+fmat mesolver::evolveState(cx_mat rho0, cx_mat H0, vector<cx_mat> cOps, vector<cx_mat> tOps, vector<cx_mat> Ht, vector<vector<float>> params, vector<float(*)(float, vector<float>)> f, float dt, vector<float> tvec, vector<float> coeff, bool isSparse) {
 	cx_mat currentState, H;
 	int dataLength, dataIndex;
 	currentState = rho0;
 	H = H0;
-	float t = 0;
-	dataLength = tmax/dt;
-	fmat dataList(tOps.size() + 1, dataLength);
+	// float t = 0;
+	// dataLength = tmax/dt;
+	// mat dataList(tOps.size() + 1, dataLength);
+	fmat dataList(tOps.size() + 1, tvec.size());
 	dataIndex = 0;
-	while(t <= tmax && dataIndex < dataLength) {
-		for(int i = 0; i < Ht.size(); i++) {
-			H += f[i](t, params[i])*Ht[i];
-		}
-		dataList(0, dataIndex) = t;
-		for(int i = 0; i < tOps.size(); i++) {
-			dataList(i + 1, dataIndex) = trace(abs(tOps[i]*currentState.t()));
-		}
+
+	for(int i = 0; i < tvec.size(); i++) {
+		for(int j = 0; j < Ht.size(); j++)
+			H += f[j](tvec[i], params[j])*Ht[j];
+		dataList(0, i) = tvec[i];
+		for(int j = 0; j < tOps.size(); j++)
+			dataList(j + 1, i) = trace(abs(tOps[j]*currentState.t()));
 		currentState = RK4(dt, H, currentState, cOps, coeff);
-		t += dt; dataIndex++;
 	}
+
+	// while(t <= tmax && dataIndex < dataLength) {
+	// 	for(int i = 0; i < Ht.size(); i++) {
+	// 		H += f[i](t, params[i])*Ht[i];
+	// 	}
+	// 	dataList(0, dataIndex) = t;
+	// 	for(int i = 0; i < tOps.size(); i++) {
+	// 		dataList(i + 1, dataIndex) = trace(abs(tOps[i]*currentState.t()));
+	// 	}
+	// 	currentState = RK4(dt, H, currentState, cOps, coeff);
+	// 	t += dt; dataIndex++;
+	// }
 	return dataList;
 }
 
@@ -56,7 +66,7 @@ cx_mat mesolver::RK4(float hs, cx_mat H, cx_mat rho, vector<cx_mat> cOps, vector
 
 	return(xx); 
 }
-*/
+/*
 #include "mesolver.h"
 
 mesolver::mesolver() {
@@ -114,3 +124,4 @@ MatrixXcd mesolver::RK4(float hs, MatrixXcd H, MatrixXcd rho, vector<MatrixXcd> 
 
 	return(xx); 
 }
+*/
