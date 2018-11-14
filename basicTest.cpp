@@ -14,9 +14,6 @@ int main() {
 	ofstream fout;
 
 	fout.open("output.dat");
-	
-	fmat data;
-	data = me.evolveState(r00, H0, cOps, tOps, Ht, params, f, dt, tvec, coeff, isSparse);
 
 	cx_mat rho0, H0, a, ad, rho1, sigmax, sigmaz, someState;
 	vector<cx_mat> cOps, tOps, Ht;
@@ -52,12 +49,8 @@ int main() {
 	for(int i = 0; i < 10000; i++) {
 		tvec.push_back(dt*i);
 	}
-	// for(int i = 0; i < tvec.size(); i++)
-	// 	cout << tvec[i] << " ";
-	// cout << endl;
 
 	data = me.evolveState(rho0, H0, cOps, tOps, Ht, params, f, dt, tvec, coeff, isSparse);
-	// cout << data << endl;
 
 	fout << data;
 
