@@ -14,7 +14,7 @@ int main() {
 	ofstream fout;
 	bool isSparse = 0;
 
-	fout.open("qubitResonator_error_output.dat");
+	fout.open("qubitResonator_correct_output.dat");
 
 	cx_mat I, r00, r01, r10, r11, r20, r21, target, CurrentState, II, III, s0, s1, ss0, ss1, ss2, a, aa, a1, a2, H0, HX, HY;
 	vector<cx_mat> cOps, tOps, Ht;
@@ -43,7 +43,7 @@ int main() {
 	float dt = 0.001;
 	float tmax = 20;
 	vector<float> tvec;
-	for(int i = 0; i <= tmax/dt; i++)
+	for(int i = 0; i <= 10*tmax/dt; i++)
 		tvec.push_back(dt*i);
 	vector<vector<float>> params = {{0.04*PI, tmax},{0.0, tmax}};
 	vector<float(*)(float, vector<float>)> f = {pulse, pulse};

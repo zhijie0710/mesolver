@@ -5,7 +5,7 @@ using namespace std;
 using namespace arma;
 
 float pulse1(float t, vector<float> params) {
-	return(params[0]*sin(PI*t/params[1]));
+	return(params[0]*sin(PI*t/(2*params[1])));
 }
 
 int main() {
@@ -13,7 +13,7 @@ int main() {
 	mesolver me;
 	ofstream fout;
 
-	fout.open("output.dat");
+	fout.open("basic_correct_output.dat");
 
 	cx_mat rho0, H0, a, ad, rho1, sigmax, sigmaz, someState;
 	vector<cx_mat> cOps, tOps, Ht;
@@ -37,8 +37,8 @@ int main() {
 	Ht = {sigmax};
 	
 	dt = 0.001; tmax = 15;
-	coeff = {2.0};
-	params = {{0.2, tmax}};
+	coeff = {0.1};
+	params = {{10.0, tmax}};
 	vector<float(*)(float, vector<float>)> f = {pulse1};
 
 	fmat data;
@@ -46,7 +46,7 @@ int main() {
 	someState *= 0.5;
 
 	vector<float> tvec;
-	for(int i = 0; i < 10000; i++) {
+	for(int i = 0; i < tmax/dt; i++) {
 		tvec.push_back(dt*i);
 	}
 

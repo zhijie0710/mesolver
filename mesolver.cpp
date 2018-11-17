@@ -23,7 +23,7 @@ fmat mesolver::evolveState(cx_mat rho0, cx_mat H0, vector<cx_mat> cOps, vector<c
 		for(int j = 0; j < tOps.size(); j++)
 			dataList(j + 1, i) = trace(abs(tOps[j]*currentState.t()));
 		currentState = RK4(dt, H, currentState, cOps, coeff);
-		H = H0;
+		// H = H0;
 	}
 
 	return dataList;
