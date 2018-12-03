@@ -55,3 +55,44 @@ def integrate(N, h, Jx, Jy, Jz, psi0, tlist, gamma, solver):
 
     return result.expect
 
+//===================================================================
+
+#
+# set up the calculation
+#
+solver = "me"   # use the ode solver
+#solver = "mc"   # use the monte-carlo solver
+
+N = 10            # number of spins
+
+// # array of spin energy splittings and coupling strengths. here we use
+// # uniform parameters, but in general we don't have too
+h  = 1.0 * 2 * np.pi * np.ones(N) 
+Jz = 0.1 * 2 * np.pi * np.ones(N)
+Jx = 0.1 * 2 * np.pi * np.ones(N)
+Jy = 0.1 * 2 * np.pi * np.ones(N)
+# dephasing rate
+gamma = 0.01 * np.ones(N)
+
+# intial state, first spin in state |1>, the rest in state |0>
+psi_list = []
+psi_list.append(basis(2,1))
+for n in range(N-1):
+    psi_list.append(basis(2,0))
+psi0 = tensor(psi_list)
+
+tlist = np.linspace(0, 50, 200)
+
+sz_expt = integrate(N, h, Jx, Jy, Jz, psi0, tlist, gamma, solver)
+
+//===================================================================
+
+fig, ax = plt.subplots(figsize=(10,6))
+
+for n in range(N):
+    ax.plot(tlist, np.real(sz_expt[n]), label=r'$\langle\sigma_z^{(%d)}\rangle$'%n)
+
+ax.legend(loc=0)
+ax.set_xlabel(r'Time [ns]')
+ax.set_ylabel(r'\langle\sigma_z\rangle')
+ax.set_title(r'Dynamics of a Heisenberg spin chain');
