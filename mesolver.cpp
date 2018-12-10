@@ -1,7 +1,4 @@
 #include "mesolver.h"
-#include <cstdlib>
-
-
 
 mesolver::mesolver() {
 
@@ -52,7 +49,31 @@ fmat mesolver::evolveState(cx_mat rho0, cx_mat H0, vector<cx_mat> cOps, vector<c
 	return dataList;
 }
 
-/*
+cx_mat mesolver::lindbladME(cx_mat H, cx_mat rho, vector<cx_mat> cOps, vector<float> coeff)
+{
+	cx_mat newrho;
+	newrho = IM*(rho * H - H * rho);
+	for (int i = 0; i < coeff.size() ; i++)
+	{
+		newrho += coeff[i]*(cOps[i]*rho*cOps[i].t() - 0.5*(cOps[i].t()*cOps[i]*rho + rho*cOps[i].t()*cOps[i]));
+	}
+	return(newrho);
+}
+
+cx_mat mesolver::RK4(float hs, cx_mat H, cx_mat rho, vector<cx_mat> cOps, vector<float> coeff)
+{
+	cx_mat k1 = lindbladME(H, rho, cOps, coeff) * hs;
+	cx_mat rho1 = rho + k1 * 0.5;
+	cx_mat k2 = lindbladME( H, rho1, cOps, coeff) * hs;
+	cx_mat rho2 = rho + k2 * 0.5;
+	cx_mat k3 = lindbladME( H, rho2, cOps, coeff) * hs;
+	cx_mat rho3 = rho + k3;
+	cx_mat k4 = lindbladME( H, rho3, cOps, coeff) * hs;
+	cx_mat xx = rho + (k1 + 2*(k2 + k3) + k4)/6;
+
+	return(xx); 
+}
+
 sp_cx_mat mesolver::lindbladMESparse(sp_cx_mat H, sp_cx_mat rho, vector<sp_cx_mat> cOps, vector<float> coeff)
 {
 	sp_cx_mat newrho;
@@ -63,37 +84,17 @@ sp_cx_mat mesolver::lindbladMESparse(sp_cx_mat H, sp_cx_mat rho, vector<sp_cx_ma
 	}
 	return(newrho);
 }
-*/
 
-
-
-sp_cx_mat f(sp_cx_mat H,  vector<sp_cx_mat> cOps, sp_cx_mat phi)  //phi is the current state |phi(t)>.
+sp_cx_mat mesolver::RK4Sparse(float hs, sp_cx_mat H, sp_cx_mat rho, vector<sp_cx_mat> cOps, vector<float> coeff)
 {
-	sp_cx_mat Heff;
-	Heff = H;
-	for (int i = 0; i < cOps.size(); i++)
-	{
-		Heff += - 0.5 * i * (cOps[i].t()*cOps[i]);
-	}
-	return(-i*Heff*phi);
-}
-
-//pick a r ~ [0,1], if |<phi|phi>| < r, apply quantum jump, then normalize |phi>, and pick a new r
-
-
-
-
-
-sp_cx_mat mesolver::RK4Sparse(float hs, sp_cx_mat H, vector<sp_cx_mat> cOps, sp_cx_mat phi)
-{
-	sp_cx_mat k1 = f( H, cOps, phi) * hs;
-	sp_cx_mat phi1 = phi + k1 * 0.5;
-	sp_cx_mat k2 = f( H, cOps, phi) * hs;
-	sp_cx_mat phi2 = phi + k2 * 0.5;
-	sp_cx_mat k3 = f( H, cOps, phi) * hs;
-	sp_cx_mat phi3 = phi + k3;
-	sp_cx_mat k4 = f( H, cOps, phi) * hs;
-	sp_cx_mat xx = phi + (k1 + 2*(k2 + k3) + k4)/6;
+	sp_cx_mat k1 = lindbladMESparse(H, rho, cOps, coeff) * hs;
+	sp_cx_mat rho1 = rho + k1 * 0.5;
+	sp_cx_mat k2 = lindbladMESparse( H, rho1, cOps, coeff) * hs;
+	sp_cx_mat rho2 = rho + k2 * 0.5;
+	sp_cx_mat k3 = lindbladMESparse( H, rho2, cOps, coeff) * hs;
+	sp_cx_mat rho3 = rho + k3;
+	sp_cx_mat k4 = lindbladMESparse( H, rho3, cOps, coeff) * hs;
+	sp_cx_mat xx = rho + (k1 + 2*(k2 + k3) + k4)/6;
 
 	return(xx); 
 }
