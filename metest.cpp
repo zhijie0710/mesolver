@@ -115,7 +115,7 @@ int main()
     {
         phi = RK4( hs,  H, cOps, phi);
         double p=abs(phi.t() * phi);
-        while(p<r)
+        if(p<r)
         {
     	    phi = normalise(Jump(phi));
     	    r = dist(mt);
