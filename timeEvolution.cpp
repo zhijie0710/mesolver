@@ -12,7 +12,7 @@ void timeEvolution::makePListDense(vector<cx_mat>& cOps, cx_vec& phi, vector<flo
 {
 	int N = cOps.size();
 	for (int i = 0; i < N; i++)
-		plist[i] = abs(as_scalar(phi.t()*cOps[i].t()*cOps[i]*phi));
+		plist[i] = abs(as_scalar(phi.t()*cOps[i].t()*cOps[i]*phi));//absolute value?
 
     for (int i = 0; i < N-1; i++)
     	plist[i+1] = plist[i] + plist[i+1];
