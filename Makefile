@@ -1,14 +1,14 @@
-test2.exe: mesolver.o test.o
-	g++ test.o mesolver.o -o test2.exe -larmadillo
+test.exe: timeEvolution.o test.o
+	g++ test.o timeEvolution.o -o test.exe -larmadillo
 
 test.o: test.cpp
 	g++ -c -std=c++11 test.cpp -larmadillo
 
-mesolver.o: mesolver.cpp mesolver.h
-	g++ -c -std=c++11 mesolver.cpp -larmadillo
+timeEvolution.o: timeEvolution.cpp timeEvolution.h
+	g++ -c -std=c++11 timeEvolution.cpp -larmadillo
 
 clean:
 	rm *.o *.exe
 
-run: test2.exe
-	./test2.exe
+run: test.exe
+	./test.exe

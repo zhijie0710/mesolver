@@ -84,16 +84,6 @@ cx_vec Jump(vector<float> coeff,  vector<sp_cx_mat> cOps, cx_vec phi)
     }
     phi = cOps[i]*phi;
     return(phi);
-/*
-for (int i = 0; i < coeff.size(); i++)
-{
-	if(coeff[i]>s)
-	{
-		phi = cOps[i] * phi;
-		return(phi);
-	}
-}*/
-
 }
 
 
@@ -104,29 +94,23 @@ int main()
 {
 	float tf=10;
 	float hs = 0.01;
+    int a = tf/hs;
 
-   int a = tf/hs;
-for (int i=0; i < a; i++)
-{
+    random_device rd;
+    mt19937 mt(rd());
+    uniform_real_distribution<double> dist(0.0, 1.0);
+    double r = dist(mt);
 
-
-random_device rd;
-mt19937 mt(rd());
-uniform_real_distribution<double> dist(0.0, 1.0);
-double r = dist(mt);
-//cout << r << "\n";
-
-phi = RK4( hs,  H, cOps, phi);
-double p=abs(phi.t() * phi);
-    while(p<r)
+    for (int i=0; i < a; i++)
     {
-    	phi = normalise(Jump(phi));
+        phi = RK4( hs,  H, cOps, phi);
+        double p=abs(phi.t() * phi);
+        if(p<r)
+        {
+    	    phi = normalise(Jump(phi));
+    	    r = dist(mt);
+        }
     }
-
-}
-    
-
-
 return(0);
 }
 
